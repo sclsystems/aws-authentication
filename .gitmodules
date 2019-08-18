@@ -1,0 +1,3 @@
+[submodule "lib/aws-google-auth"]
+	path = lib/aws-google-auth
+	url = git@github.com:cevoaustralia/aws-google-auth.git
