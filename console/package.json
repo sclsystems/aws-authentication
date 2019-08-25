@@ -1,0 +1,22 @@
+{
+  "name": "google-saml",
+  "version": "1.0.0",
+  "description": "Google SAML Configuration Setup",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JamesMarino/AWS-Auth.git"
+  },
+  "author": "James Marino <james@marino.io>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JamesMarino/AWS-Auth/issues"
+  },
+  "homepage": "https://github.com/JamesMarino/AWS-Auth#readme",
+  "dependencies": {
+    "googleapis": "^42.0.0"
+  }
+}

@@ -1,4 +1,4 @@
-authenticate:
+cli-authenticate:
 	@docker-compose run \
 		--rm \
 		-e GOOGLE_IDP_ID=$(GOOGLE_IDP_ID) \
@@ -6,4 +6,4 @@ authenticate:
 		-e DURATION=3600 \
 		-e AWS_DEFAULT_REGION=ap-southeast-2 \
 		-e AWS_PROFILE=default \
-		aws-auth
+		aws-auth-cli -a

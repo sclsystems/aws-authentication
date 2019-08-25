@@ -1,0 +1,2 @@
+# Todo: Check Variable - aws_session_expiration = 2019-08-25T05:15:07+0000
+PS1="[59m] 🦞 ${PS1} "
