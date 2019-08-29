@@ -16,6 +16,7 @@ const authenticate = async () => {
 
     const authUrl = oauth2Client.generateAuthUrl({
         access_type: oAuthConstants.accessType,
+        prompt: oAuthConstants.promptType,
         scope: oAuthConstants.scopes,
     });
 
@@ -26,25 +27,26 @@ const authenticate = async () => {
         output: process.stdout,
     });
 
-    read.question(userInfoConstants.codeInput, (code) => {
-        read.close();
-        oauth2Client.getToken(code, async (error, token) => {
-            if (error) {
-                return console.error(errorsConstants.tokenRetrieval);
-            }
+    return new Promise((resolve, reject) => {
+        read.question(userInfoConstants.codeInput, (code) => {
+            read.close();
+            oauth2Client.getToken(code, async (error, token) => {
+                if (error) {
+                    return reject(errorsConstants.tokenRetrieval({ error }));
+                }
 
-            try {
-                await fs.writeFile(tokenFile, JSON.stringify(token));
-                return true;
-            } catch (error) {
-                console.log(errorsConstants.writingError({ fileName: tokenFile }));
-                return false;
-            }
+                try {
+                    await fs.writeFile(tokenFile, JSON.stringify(token));
+                    return resolve();
+                } catch (error) {
+                    return reject(errorsConstants.writingError({ fileName: tokenFile }));
+                }
+            });
         });
     });
 };
 
-const listUsers = async (auth) => {
+const listUsers = async () => {
     const credentials = utils.getCredentials();
     const tokenFile = utils.getTokenPath();
 
@@ -63,28 +65,38 @@ const listUsers = async (auth) => {
     }
 
     const service = google.admin({ version: oAuthConstants.version, auth: oauth2Client });
-    service.users.list({
-        customer: 'my_customer',
-        maxResults: 10,
-        orderBy: 'email',
-    }, (err, res) => {
-        if (err) return console.error('The API returned an error:', err.message);
 
-        const users = res.data.users;
-        if (users.length) {
-            console.log('Users:');
-            users.forEach((user) => {
-                console.log(`${user.primaryEmail} (${user.name.fullName})`);
-            });
-        } else {
-            console.log('No users found.');
-        }
+    return new Promise((resolve, reject) => {
+        service.users.list({
+            customer: 'my_customer',
+            maxResults: 10,
+            orderBy: 'email',
+        }, (err, res) => {
+            if (err) {
+                return reject('The API returned an error:', err.message);
+            }
 
-        return true;
+            const users = res.data.users;
+            if (users.length) {
+                console.log('Users:');
+                users.forEach((user) => {
+                    console.log(`${user.primaryEmail} (${user.name.fullName})`);
+                });
+            } else {
+                return resolve('No users found.');
+            }
+
+            return resolve();
+        });
     });
 };
 
 (async () => {
-    await authenticate();
-    await listUsers();
+    try {
+        await authenticate();
+        await listUsers();
+        process.exit(0);
+    } catch (error) {
+        process.exit(1);
+    }
 })();

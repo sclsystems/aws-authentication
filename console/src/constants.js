@@ -15,6 +15,7 @@ const oAuth = {
         'https://www.googleapis.com/auth/admin.directory.user'
     ],
     accessType: 'offline',
+    promptType: 'consent',
     version: 'directory_v1',
 };
 
