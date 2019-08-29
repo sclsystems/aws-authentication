@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-cd $(dirname $0)/../src/cli/
-make authenticate
+cd "${AWS_AUTH_DIRECTORY}" || (echo 'Please set AWS_AUTH_DIRECTORY in your shell config file' && exit)
+make cli-authenticate
