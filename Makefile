@@ -12,3 +12,9 @@ cli-authenticate:
 		-e AWS_DEFAULT_REGION=ap-southeast-2 \
 		-e AWS_PROFILE=default \
 		aws-auth-cli -a && ([ $$? -eq 0 ] && echo AWS_SESSION_TOKEN_EXPIRY=$(shell echo $(HOUR_LATER)) > $(HOME)/.aws_session_expiry)
+.PHONY: cli-authenticate
+
+cli-deny:
+	@echo '' > $(HOME)/.aws/credentials
+	@echo '' > $(HOME)/.aws_session_expiry
+.PHONY: cli-deny
